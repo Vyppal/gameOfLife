@@ -1,0 +1,12 @@
+Game of Life in Python
+
+This is just a game of life simulation made in pygame.
+
+
+Each cell will be represented by a singular pixel.
+
+Rules:
+  1) Any live cell with fewer than 2 live neighbours dies
+  2) Any live cell with 2 or 3 live neighbours lives
+  3) Any live cell with more than 3 neighbours dies
+  4) Any dead cell with 3 live neighbours becomes a live cell
