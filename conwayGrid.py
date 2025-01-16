@@ -23,7 +23,7 @@ class ConwayGrid():
 
   # Checks whether a specified row and column is within the grid bounds
   def isCoordInGrid(self, column: int, row: int) -> bool:
-    if column < 0 or self._columnCount < column or row < 0 or self._rowCount < row:
+    if column < 0 or self._columnCount <= column or row < 0 or self._rowCount <= row:
       return False
     return True
 
@@ -58,6 +58,19 @@ class ConwayGrid():
 
 
   def getRuleResults(self, isLiving: bool, liveNeighbourCount: int) -> bool:
+    # # Rule 1
+    # if isLiving and liveNeighbourCount < 2:
+    #   return False
+    # # Rule 2
+    # if isLiving and liveNeighbourCount in [2, 3]:
+    #   return True
+    # # Rule 3
+    # if isLiving and 3 < liveNeighbourCount:
+    #   return False
+    # # Rule 4
+    # if not isLiving and liveNeighbourCount == 3:
+    #   return True
+
     # Rules 2 and 4
     if liveNeighbourCount == 3:
       return True
@@ -68,7 +81,11 @@ class ConwayGrid():
     if liveNeighbourCount < 2 or 3 < liveNeighbourCount:
       return False
     
-    print("Warning: Failed to reach a rule result!")
+    # Catching dead cell with 2 live neigbours
+    if not isLiving and liveNeighbourCount == 2:
+      return False
+    
+    print(f"Warning: Failed to reach a rule result!     Living Neighbour Count: {liveNeighbourCount}     Cell Alive: {isLiving}")
     return False
 
 
@@ -92,16 +109,44 @@ class ConwayGrid():
         start = 1 - start
 
 
+  # Forces a cell to be living
+  def forceLiving(self, cellColumn: int, cellRow: int) -> None:
+    # validate cell is in boundary
+    if not self.isCoordInGrid(cellColumn, cellRow):
+      raise f"Cell located at ({cellColumn}, {cellRow}) is not in bounds of grid with size ({self._columnCount}, {self._rowCount}). [From forceLiving]"
+    
+    print("Logger: forced a cell to be alive at: ", [cellColumn, cellRow])
+    self._grid[cellRow][cellColumn] = True
+
+
+  def DEBUG_print(self) -> None:
+    string = ""
+    for row in range(self._rowCount):
+      for column in range(self._columnCount):
+        if self._grid[row][column]:
+          string += "#"
+        else:
+          string += " "
+      string += "\n"
+    print(string, "-" * self._columnCount)
+
+
+
   # Updates the gamestate to the next frame
-  def update(self, debugMode=False) -> None:
-    if debugMode:
-      self.DEBUG_checkboardify()
+  def update(self, debug=False, debugMode=0) -> None:
+    if debug:
+      match debugMode:
+        case 1:
+          self.DEBUG_checkboardify()
+        case 2:
+          self.DEBUG_print()
       return
     
     clonedGrid: list[list[bool]] = [[False for i in range(self._columnCount)] for j in range(self._rowCount)]
     for row in range(self._rowCount):
       for column in range(self._columnCount):
-        clonedGrid[row][column] == self.predictNextCellState(column, row)
+        val = self.predictNextCellState(column, row)
+        clonedGrid[row][column] = val
     
     # update the main grid
     self._grid = clonedGrid
