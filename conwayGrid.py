@@ -10,6 +10,16 @@ class ConwayGrid():
     self._grid: list[list[bool]] = [[False for i in range(columnCount)] for j in range(rowCount)]
     # Living cells are represented as True in the grid
   
+  
+  # accessor method
+  def getGrid(self) -> list[list[bool]]:
+    return self._grid
+
+
+  # accessor method
+  def getDimensions(self) -> list[int]:
+    return [self._columnCount, self._rowCount]
+
 
   # Checks whether a specified row and column is within the grid bounds
   def isCoordInGrid(self, column: int, row: int) -> bool:
