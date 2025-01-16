@@ -10,7 +10,7 @@ class ConwayGrid():
     self._grid: list[list[bool]] = [[False for i in range(columnCount)] for j in range(rowCount)]
     # Living cells are represented as True in the grid
   
-  
+
   # accessor method
   def getGrid(self) -> list[list[bool]]:
     return self._grid
@@ -82,8 +82,22 @@ class ConwayGrid():
     return self.getRuleResults(self.checkIfCellLiving(cellColumn, cellRow), liveNeighbourCount)
 
 
+  # makes living and dead cells form a checkerboard pattern
+  def DEBUG_checkboardify(self) -> None:
+    for row in range(self._rowCount):
+      start = row % 2
+      for column in range(self._columnCount):
+        if start == 0:
+          self._grid[row][column] = True
+        start = 1 - start
+
+
   # Updates the gamestate to the next frame
-  def update(self) -> None:
+  def update(self, debugMode=False) -> None:
+    if debugMode:
+      self.DEBUG_checkboardify()
+      return
+    
     clonedGrid: list[list[bool]] = [[False for i in range(self._columnCount)] for j in range(self._rowCount)]
     for row in range(self._rowCount):
       for column in range(self._columnCount):

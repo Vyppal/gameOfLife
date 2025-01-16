@@ -47,7 +47,7 @@ while True:
       sys.exit()
     if event.type == pygame.KEYDOWN:
       if event.key == pygame.K_SPACE:
-        conwayGrid.update()
+        conwayGrid.update(debugMode=True)
 
   drawGrid(conwayGrid)
   
